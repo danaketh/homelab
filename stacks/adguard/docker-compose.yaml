@@ -25,7 +25,7 @@ services:
       - '784:784/udp'
       - '853:853/tcp'
       - '853:853/udp'
-      # '3000:3000/tcp'
+      - '3001:3000/tcp' # WebUI for installation
       - '5443:5443/tcp'
       - '5443:5443/udp'
       - '8053:80/tcp'
