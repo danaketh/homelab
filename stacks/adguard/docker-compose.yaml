@@ -22,7 +22,7 @@ services:
       #- '443:443/tcp'
       - '8053:80/tcp'
       - '853:853/tcp'
-      - '3000:3000/tcp'
+      # '3000:3000/tcp'
     networks:
         - traefik
     labels:
