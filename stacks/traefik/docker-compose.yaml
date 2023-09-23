@@ -6,7 +6,6 @@ services:
     container_name: "traefik"
     tty: true
     stdin_open: true
-    command: ["mkdir /etc/traefik", "&&", "wget", "https://raw.githubusercontent.com/danaketh/homelab/main/stacks/traefik/etc/traefik.yml", "/etc/traefik/traefik.yml"]
     ports:
       - "80:80" # HTTP
       - "443:443" # HTTPS
@@ -14,7 +13,13 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik-ssl-certs:/ssl-certs
+    configs:
+        - traefik
       
 volumes:
     traefik-ssl-certs:
         driver: local
+
+configs:
+    traefik:
+        file: ./etc/traefik.yml
