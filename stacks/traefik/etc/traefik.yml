@@ -1,0 +1,25 @@
+# Global config
+# -----
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
+
+# Enable Dashboard and API
+# -----
+api:
+  dashboard: true
+  insecure: true
+
+# Entrypoints
+# -----
+entryPoints:
+  http:
+    address: :80
+  https:
+    address: :443
+  dns:
+    address: :53
+
+# Providers
+providers:
+  docker: {}

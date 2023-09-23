@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.10
+    container_name: "traefik"
+    tty: true
+    stdin_open: true
+    ports:
+      - "53:53" # DNS
+      - "80:80" # HTTP
+      - "443:443" # HTTPS
+      - "8080:8080" # Fine for home server, a big no-no for production
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - etc/traefik:/etc/traefik/
+      - traefik-ssl-certs:/ssl-certs
+      
+volumes:
+    traefik-ssl-certs:
+        driver: local
