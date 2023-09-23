@@ -12,7 +12,7 @@ services:
       - "8080:8080" # Fine for home server, a big no-no for production
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/traefik:/etc/traefik/
+      - /etc:/etc/traefik
       - traefik-ssl-certs:/ssl-certs
       
 volumes:
