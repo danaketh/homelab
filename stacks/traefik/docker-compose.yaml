@@ -14,13 +14,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - traefik-ssl-certs:/ssl-certs
       - /home/danaketh/homelab/stacks/traefik/etc/traefik.yml:/etc/traefik.yml
-    configs:
-        - traefik
       
 volumes:
     traefik-ssl-certs:
         driver: local
-
-configs:
-    traefik:
-        file: ./etc/traefik.yml
