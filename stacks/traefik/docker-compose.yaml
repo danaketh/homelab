@@ -7,7 +7,7 @@ services:
     tty: true
     stdin_open: true
     configs:
-      - source: stacks/traefik/etc/traefik.yml
+      - source: /stacks/traefik/etc/traefik.yml
         target: /etc/traefik/traefik.yml
     ports:
       - "80:80" # HTTP
