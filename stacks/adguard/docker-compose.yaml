@@ -24,7 +24,7 @@ services:
       - '853:853/tcp'
       - '3000:3000/tcp'
     networks:
-        - traefik_default
+        - traefik
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adguard.entrypoints=http"
@@ -32,5 +32,5 @@ services:
       - "traefik.http.services.adguard.loadbalancer.server.port=80"
 
 networks:
-    traefik_default:
-        external: true
+    traefik:
+        name: traefik_default
