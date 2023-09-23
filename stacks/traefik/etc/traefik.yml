@@ -17,9 +17,12 @@ entryPoints:
     address: :80
   https:
     address: :443
-  dns:
-    address: :53
 
 # Providers
+# -----
 providers:
-  docker: {}
+  docker:
+    exposedByDefault: false
+  file:
+    directory: /etc/traefik
+    watch: true
