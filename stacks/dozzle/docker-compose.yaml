@@ -6,7 +6,7 @@ services:
     container_name: "dozzle"
     restart: unless-stopped
     ports:
-      - '8054:80'
+      - '80:8080'
     networks:
         - traefik
     volumes:
@@ -15,7 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dozzle.entrypoints=http"
       - "traefik.http.routers.dozzle.rule=Host(`dozzle.home`)"
-      - "traefik.http.services.dozzle.loadbalancer.server.port=80"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
 
 networks:
     traefik:
