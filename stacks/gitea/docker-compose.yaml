@@ -15,6 +15,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     networks:
       - traefik
+      - gitea
     environment:
       GITEA__database__DB_TYPE: postgres
       GITEA__database__HOST: db:5432
