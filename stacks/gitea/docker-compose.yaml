@@ -14,8 +14,8 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     networks:
-      - traefik
       - gitea
+      - traefik
     environment:
       GITEA__database__DB_TYPE: postgres
       GITEA__database__HOST: db:5432
@@ -36,6 +36,7 @@ services:
       - "traefik.tcp.routers.gitea-ssh.service=gitea-ssh"
       - "traefik.tcp.routers.gitea-ssh.rule=Host(`git.home`)"
       - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=2222"
+      - "traefik.docker.network=gitea"
 
   db:
     image: postgres:14
@@ -55,6 +56,7 @@ services:
 networks:
   gitea:
     name: gitea_default
+    external: false
   traefik:
     name: traefik_default
     external: true
