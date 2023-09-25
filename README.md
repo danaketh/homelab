@@ -36,12 +36,12 @@ my home into a smart home without spending a lot of money and using proprietary 
 ### Dozzle
 Dozzle is a simple container log viewer for Docker. You get all logs in one place and you can easily filter them.
 
-### Grafana
-Grafana is a monitoring platform. I'm mostly just playing with it to learn something new and play with different data.
-
 ### Gitea
 Gitea is a self-hosted Git service. I'm using it to test workflows before pushing them to GitHub and also as a backup
 of all my repositories.
+
+### Grafana
+Grafana is a monitoring platform. I'm mostly just playing with it to learn something new and play with different data.
 
 ### Traefik
 Traefik is a reverse proxy. It allows me to expose my services to the network without exposing them directly and having
