@@ -48,6 +48,8 @@ services:
       - '127.0.0.1:5432:5432'
     volumes:
       - gitea-db:/var/lib/postgresql/data
+    networks:
+      - gitea
 
 networks:
   gitea:
