@@ -26,11 +26,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gitea-http.entrypoints=http"
-      - "traefik.http.routers.gitea-http.service=gitea"
+      - "traefik.http.routers.gitea-http.service=gitea-http"
       - "traefik.http.routers.gitea-http.rule=Host(`git.home`)"
       - "traefik.http.services.gitea-http.loadbalancer.server.port=3000"
       - "traefik.http.routers.gitea-ssh.entrypoints=ssh"
-      - "traefik.http.routers.gitea-ssh.service=gitea"
+      - "traefik.http.routers.gitea-ssh.service=gitea-ssh"
       - "traefik.http.routers.gitea-ssh.rule=Host(`git.home`)"
       - "traefik.http.services.gitea-ssh.loadbalancer.server.port=2222"
 
