@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  domoticz:
+    image: domoticz/domoticz:stable
+    container_name: domoticz
+    restart: unless-stopped
+    ports:
+      - '8056:8080'
+    networks:
+      - traefik
+    volumes:
+      - domoticz_data:/opt/domoticz/userdata
+    environment:
+      - TZ=Europe/Prague
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.domoticz.entrypoints=http"
+      - "traefik.http.routers.domoticz.rule=Host(`assistant.home`)"
+      - "traefik.http.services.domoticz.loadbalancer.server.port=8080"
+
+networks:
+  traefik:
+    name: traefik_default
+    external: true
+
+volumes:
+    domoticz_data: {}
