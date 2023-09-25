@@ -17,6 +17,8 @@ entryPoints:
     address: :80
   https:
     address: :443
+  ssh:
+    address: :2222
 
 # Providers
 # -----
