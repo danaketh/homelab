@@ -34,7 +34,6 @@ services:
       - "traefik.http.services.gitea-http.loadbalancer.server.port=3000"
       - "traefik.tcp.routers.gitea-ssh.entrypoints=ssh"
       - "traefik.tcp.routers.gitea-ssh.service=gitea-ssh"
-      - "traefik.tcp.routers.gitea-ssh.rule=Host(`git.home`)"
       - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=2222"
       - "traefik.docker.network=gitea"
 
