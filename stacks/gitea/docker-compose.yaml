@@ -32,10 +32,10 @@ services:
       - "traefik.http.routers.gitea-http.service=gitea-http"
       - "traefik.http.routers.gitea-http.rule=Host(`git.home`)"
       - "traefik.http.services.gitea-http.loadbalancer.server.port=3000"
-      - "traefik.http.routers.gitea-ssh.entrypoints=ssh"
-      - "traefik.http.routers.gitea-ssh.service=gitea-ssh"
-      - "traefik.http.routers.gitea-ssh.rule=Host(`git.home`)"
-      - "traefik.http.services.gitea-ssh.loadbalancer.server.port=2222"
+      - "traefik.tcp.routers.gitea-ssh.entrypoints=ssh"
+      - "traefik.tcp.routers.gitea-ssh.service=gitea-ssh"
+      - "traefik.tcp.routers.gitea-ssh.rule=Host(`git.home`)"
+      - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=2222"
 
   db:
     image: postgres:14
