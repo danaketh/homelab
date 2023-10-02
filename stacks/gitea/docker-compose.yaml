@@ -24,18 +24,14 @@ services:
       GITEA__database__PASSWD: gitea
     depends_on:
       - db
-    links:
-      - db
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gitea-http.entrypoints=http"
-      - "traefik.http.routers.gitea-http.service=gitea-http"
       - "traefik.http.routers.gitea-http.rule=Host(`git.home`)"
       - "traefik.http.services.gitea-http.loadbalancer.server.port=3000"
       - "traefik.tcp.routers.gitea-ssh.entrypoints=ssh"
-      - "traefik.tcp.routers.gitea-ssh.service=gitea-ssh"
+      - "traefik.http.routers.gitea-ssh.rule=Host(`git.home`)"
       - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=2222"
-      - "traefik.docker.network=gitea_default"
 
   db:
     image: postgres:14
@@ -51,6 +47,7 @@ services:
       - gitea-db:/var/lib/postgresql/data
     networks:
       - gitea
+      - traefik
 
 networks:
   gitea:
