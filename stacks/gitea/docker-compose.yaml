@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     ports:
       - '8057:3000'
-      - '8058:2222'
     volumes:
       - gitea-data:/var/lib/gitea
       - gitea-config:/etc/gitea
@@ -29,9 +28,7 @@ services:
       - "traefik.http.routers.gitea-http.entrypoints=http"
       - "traefik.http.routers.gitea-http.rule=Host(`git.home`)"
       - "traefik.http.services.gitea-http.loadbalancer.server.port=3000"
-      - "traefik.tcp.routers.gitea-ssh.entrypoints=ssh"
-      - "traefik.http.routers.gitea-ssh.rule=Host(`git.home`)"
-      - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=2222"
+      - "traefik.docker.network=traefik"
 
   db:
     image: postgres:14
@@ -47,7 +44,6 @@ services:
       - gitea-db:/var/lib/postgresql/data
     networks:
       - gitea
-      - traefik
 
 networks:
   gitea:
