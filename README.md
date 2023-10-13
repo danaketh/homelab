@@ -16,11 +16,53 @@ plan to use any of these containers in production, please make sure to:
 - some HW to run 24/7
 - some Linux to run on the HW
 - some knowledge about Docker
-- Portainer (optional)
+- Pulumi
 
-## Why Portainer?
-I use Portainer to manage my Docker containers. It is not required, but it makes it easier to manage them. You can
-easily add each stack directly from repository and have it automatically updated at chosen interval.
+## Why Pulumi?
+Because it's the real infrastructure as code. You're not forced to learn some weird language that is used only for
+infrastructure. In this case, I'm using Python, but Pulumi also support TypeScript, JavaScript, Go, C#, Java, and YAML.
+
+### How to use it?
+Let's assume you have [installed Pulumi](https://www.pulumi.com/docs/install/) on your workstation and you have also installed Docker on the machine where
+your containers will be running. We'll have to do a tiny bit of configuration before we can start deploying tho.
+I'm using Ubuntu, so if you're one something else, you'll have to figure out some of the steps yourself.
+
+Login to your server console and run:
+```bash
+sudo systemctl edit docker.service
+```
+
+This should open an editor for you to modify the startup script for Docker. Ignore the long comment in the file
+where everything looks like you can just uncomment it. Instead, look for the `### Anything between here and the comment below will become the new contents of the file` and `### Lines below this comment will be discarded` comments, and add the following lines between them:
+
+```bash
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:2375
+```
+
+This will open Docker API to the world. In case of our homelab, it's not a big deal, but if you're going to use
+this repository as a boilerplate for your production environment, you should do with further configuration
+and [add TLS](https://linuxhandbook.com/docker-remote-access/). You may also go above and beyond and use some
+firewall to limit access to the API either to a list of IP addresses, a VPN, or some kind of authentication.
+
+Save the file and restart Docker:
+```bash
+sudo systemctl restart docker.service
+```
+
+You can verify that Docker API is now listening on port 2375:
+```bash
+sudo lsof -i -P -n | grep LISTEN | grep 2375
+```
+
+This should return something like this:
+```text
+dockerd   1727     root    3u  IPv6  28222      0t0  TCP *:2375 (LISTEN)
+```
+
+And you're done with the server configuration. Now you can clone this repository to your workstation and from there,
+please refer to the [Pulumi documentation](https://www.pulumi.com/docs/cli/) on how to use Pulumi.
 
 ## Available stacks
 
