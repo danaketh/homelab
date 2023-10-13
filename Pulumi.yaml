@@ -1,0 +1,6 @@
+name: homelab
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Pulumi configuration for Homelab
