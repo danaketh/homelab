@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import pulumi
 import pulumi_docker as docker
 
@@ -29,7 +27,7 @@ def definition(provider: docker.Provider, network: docker.Network):
                                          "external": 443,
                                      }, {
                                          "internal": 8080,
-                                         "external": 8080,
+                                         "external": 8100,
                                      }],
                                      envs=[
                                          f"TRAEFIK_API_INSECURE=true",
