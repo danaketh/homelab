@@ -77,6 +77,15 @@ allows me to protect kids from unwanted content. I'm also using it for forwardin
 - `3000` - Installation wizard (will be disabled after installation)
 - `8101` - Web interface
 
+#### Local network domain
+I'm using `home` as my local network domain. This allows me to access my services using `service.home` instead of
+the IP and port. All services (except Traefik) are preconfigured to use this domain. If you want to use it (or any),
+add a new DNS rewrite rule to AdGuard:
+
+| Domain name | IP                 |
+|-------------|--------------------|
+| `*.home`    | `<your_server_ip>` | 
+
 There's few more ports opened but they'll require a bit more work on your side to get them working. 
 
 ### Domoticz
@@ -85,6 +94,9 @@ my home into a smart home without spending a lot of money and using proprietary 
 
 ### Dozzle
 Dozzle is a simple container log viewer for Docker. You get all logs in one place and you can easily filter them.
+
+#### Ports
+- `8102` - Web interface
 
 ### Gitea
 Gitea is a self-hosted Git service. I'm using it to test workflows before pushing them to GitHub and also as a backup
