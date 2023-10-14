@@ -1,6 +1,6 @@
 import pulumi
 import pulumi_docker as docker
-from stacks import traefik, adguard, dozzle
+from stacks import traefik, adguard, dozzle, gitea
 
 # Set up provider
 provider = docker.Provider(
@@ -18,3 +18,4 @@ network = docker.Network(
 traefik.definition(provider, network)
 adguard.definition(provider, network)
 dozzle.definition(provider, network)
+gitea.definition(provider, network)
