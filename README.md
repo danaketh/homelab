@@ -44,7 +44,8 @@ ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 This will open Docker API to the world. In case of our homelab, it's not a big deal, but if you're going to use
 this repository as a boilerplate for your production environment, you should do with further configuration
 and [add TLS](https://linuxhandbook.com/docker-remote-access/). You may also go above and beyond and use some
-firewall to limit access to the API either to a list of IP addresses, a VPN, or some kind of authentication.
+firewall to limit access to the API either to a list of IP addresses, a VPN, or some kind of authentication. The easiest
+option would be to have Docker listen only on localhost and use SSH tunnel to access it.
 
 Save the file and restart Docker:
 ```bash
@@ -71,6 +72,13 @@ AdGuard is a DNS server with ad blocking capabilities. Since I have quite a numb
 use it as a DNS server for my network. Blocking ads on mobile devices is a bit tricky, so using AdGuard as a DNS
 allows me to protect kids from unwanted content. I'm also using it for forwarding DNS requests to my local services.
 
+#### Ports
+- `53` - DNS
+- `3000` - Installation wizard (will be disabled after installation)
+- `8101` - Web interface
+
+There's few more ports opened but they'll require a bit more work on your side to get them working. 
+
 ### Domoticz
 Domoticz is a home automation system. I'm using it to control my lights, heating, etc. Just a hobby project to turn
 my home into a smart home without spending a lot of money and using proprietary solutions.
@@ -88,6 +96,9 @@ Grafana is a monitoring platform. I'm mostly just playing with it to learn somet
 ### Traefik
 Traefik is a reverse proxy. It allows me to expose my services to the network without exposing them directly and having
 to use different ports for each service. Instead I can just use domain names and Traefik will take care of the rest.
+
+#### Ports
+- `8100` - Dashboard
 
 ### Watchtower
 Watchtower is a container that automatically updates other containers. Because I'm lazy!
