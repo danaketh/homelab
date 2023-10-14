@@ -77,16 +77,38 @@ allows me to protect kids from unwanted content. I'm also using it for forwardin
 - `3000` - Installation wizard (will be disabled after installation)
 - `8101` - Web interface
 
-#### Local network domain
-I'm using `home` as my local network domain. This allows me to access my services using `service.home` instead of
-the IP and port. All services (except Traefik) are preconfigured to use this domain. If you want to use it (or any),
-add a new DNS rewrite rule to AdGuard:
+There are other ports as well, for DNS-over-TLS, DNS-over-HTTPS, and DNS-over-QUIC, so feel free to finish the configuration
+so you can utilize them (they're enabled by default, but you'll have to configure them first).
 
-| Domain name | IP                 |
-|-------------|--------------------|
-| `*.home`    | `<your_server_ip>` | 
+#### Configuration
+Before you can use AdGuard, you'll have to create a configuration file `AdGuardHome.yaml` in the `stacks/adguard/`
+directory. There's a default configuration file `AdGuardHome.dist.yaml` that you can use as a template. To make
+things easier, all you have to do is just adding configs you wish to change to the new file. The AdGuard Pulumi
+script will then merge the default and your configuration files together.
 
-There's few more ports opened but they'll require a bit more work on your side to get them working. 
+First of all you'll want to create a user account. You can do that by adding the following lines to your config file:
+```yaml
+users:
+  - name: <your_username>
+    password: <your_password>
+```
+
+Password is stored as a Bcrypt hash, so you'll have to generate it first.
+
+Next is our DNS rewrite. I'm using it to redirect all DNS requests to my local services. To the config file add:
+```yaml
+filtering:
+  rewrites:
+    - domain: '*.<domain>'
+      answer: <ip_address>
+```
+
+Keep in mind that if you configure AdGuard using the web interface, next time you deploy the stack, your changes
+will be overwritten by the configuration you keep here. So either configure the AdGuard only using the Pulumi
+or make sure you keep the configuration in sync.
+
+#### Data storage
+By default, all the AdGuard data are configured to be stored on the host filesystem in `/opt/adguardhome/` directory.
 
 ### Domoticz
 Domoticz is a home automation system. I'm using it to control my lights, heating, etc. Just a hobby project to turn

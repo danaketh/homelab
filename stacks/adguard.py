@@ -1,8 +1,26 @@
 import pulumi
 import pulumi_docker as docker
+import yaml
 
 
 def definition(provider: docker.Provider, network: docker.Network):
+    adguard_configuration_yaml = ""
+
+    try:
+        with open("stacks/adguard/AdGuardHome.dist.yaml", "r") as file:
+            default_configuration = yaml.safe_load(file)
+
+        with open("stacks/adguard/AdGuardHome.yaml", "r") as file:
+            live_configuration = yaml.safe_load(file)
+
+        adguard_configuration_yaml = yaml.dump(
+            merge_configuration(default_configuration, live_configuration),
+            default_flow_style=False
+        )
+
+    except Exception as ex:
+        pulumi.log.error("Error creating configuration: " + str(ex))
+
     try:
         # Pull a remote Docker image
         image = docker.RemoteImage("adguard_image",
@@ -14,6 +32,17 @@ def definition(provider: docker.Provider, network: docker.Network):
                                      image=image.name,
                                      opts=pulumi.ResourceOptions(provider=provider),
                                      networks_advanced=[docker.ContainerNetworksAdvancedArgs(name=network.name)],
+                                     volumes=[{  # AdGuard configuration
+                                         "host_path": "/opt/adguardhome/conf",
+                                         "container_path": "/opt/adguardhome/conf",
+                                     }, {  # AdGuard data
+                                         "host_path": "/opt/adguardhome/work",
+                                         "container_path": "/opt/adguardhome/work",
+                                     }],
+                                     uploads=[{
+                                         "file": "/opt/adguardhome/conf/AdGuardHome.yaml",
+                                         "content": adguard_configuration_yaml,
+                                     }],
                                      dns=[
                                          "127.0.0.1",
                                          "94.140.14.14",  # AdGuard DNS
@@ -109,3 +138,21 @@ def definition(provider: docker.Provider, network: docker.Network):
 
     except Exception as ex:
         pulumi.log.error("Error creating infrastructure: " + str(ex))
+
+
+def merge_configuration(source, overrides):
+    """
+    Recursively merge dictionaries.
+
+    :param source: Base dictionary.
+    :param overrides: Dictionary to merge into the base.
+    """
+    for key, value in overrides.items():
+        if isinstance(value, dict):
+            # Get node or create one
+            node = source.setdefault(key, {})
+            merge_configuration(node, value)
+        else:
+            source[key] = value
+
+    return source

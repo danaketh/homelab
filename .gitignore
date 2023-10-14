@@ -1,3 +1,4 @@
 *.pyc
 venv/
 .idea/
+stacks/adguard/AdGuardHome.yaml
