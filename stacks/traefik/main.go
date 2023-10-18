@@ -28,6 +28,8 @@ func main() {
 		// Create the Traefik container
 		traefikContainer, err := docker.NewContainer(ctx, "traefik_container", &docker.ContainerArgs{
 			Image:       traefikImage.ImageId,
+			Name:        pulumi.String("traefik"),
+			Restart:     pulumi.String("always"),
 			NetworkMode: pulumi.String("host"),
 			Volumes: docker.ContainerVolumeArray{
 				&docker.ContainerVolumeArgs{

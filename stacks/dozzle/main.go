@@ -27,7 +27,9 @@ func main() {
 
 		// Create the Dozzle container
 		dozzleContainer, err := docker.NewContainer(ctx, "dozzle_container", &docker.ContainerArgs{
-			Image: dozzleImage.ImageId,
+			Image:   dozzleImage.ImageId,
+			Name:    pulumi.String("dozzle"),
+			Restart: pulumi.String("always"),
 			Volumes: docker.ContainerVolumeArray{
 				&docker.ContainerVolumeArgs{
 					ContainerPath: pulumi.String("/var/run/docker.sock"),
