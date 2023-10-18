@@ -24,7 +24,7 @@ def definition(provider: docker.Provider, network: docker.Network):
     try:
         # Pull a remote Docker image
         image = docker.RemoteImage("adguard_image",
-                                   name="adguard/adguardhome:latest")
+                                   name="adguard/adguardhome:v0.107.40")
 
         # Start a container
         container = docker.Container("adguard_container",
