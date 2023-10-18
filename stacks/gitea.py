@@ -83,6 +83,7 @@ def definition(provider: docker.Provider, network: docker.Network):
                                          f"GITEA__database__NAME=gitea",
                                          f"GITEA__database__USER=gitea",
                                          f"GITEA__database__PASSWD=gitea",
+                                         f"GITEA__actions__ENABLED=true",
                                      ],
                                      labels=[{
                                          "label": "traefik.enable",
