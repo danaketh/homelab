@@ -1,0 +1,3 @@
+name: homelab-traefik
+runtime: go
+description: Traefik stack for Homelab.
