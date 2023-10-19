@@ -1,0 +1,3 @@
+name: homelab-gitea
+runtime: go
+description: Gitea stack for Homelab.
