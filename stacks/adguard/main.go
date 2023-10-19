@@ -33,7 +33,7 @@ func main() {
 
 		// Create the AdGuard container
 		adGuardContainer, err := docker.NewContainer(ctx, "adguard_container", &docker.ContainerArgs{
-			Image:   adGuardImage.ImageId,
+			Image:   adGuardImage.RepoDigest,
 			Name:    pulumi.String("adguard"),
 			Restart: pulumi.String("always"),
 			Volumes: &docker.ContainerVolumeArray{
