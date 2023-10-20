@@ -35,7 +35,7 @@ func main() {
 			Name: pulumi.String("gitea_network"),
 		}, pulumi.Provider(provider))
 
-		// Create containers
+		// Create database container
 		databaseContainer, err := docker.NewContainer(ctx, "gitea_database_container", &docker.ContainerArgs{
 			Image:   databaseImage.RepoDigest,
 			Name:    pulumi.String("gitea_database"),
@@ -57,6 +57,7 @@ func main() {
 				pulumi.String("POSTGRES_DB=gitea"),
 			},
 		}, pulumi.Provider(provider))
+		// Create Gitea container
 		giteaContainer, err := docker.NewContainer(ctx, "gitea_container", &docker.ContainerArgs{
 			Image:   giteaImage.RepoDigest,
 			Name:    pulumi.String("gitea"),
@@ -118,7 +119,9 @@ func main() {
 					Value: pulumi.String("3000"),
 				},
 			},
-		}, pulumi.Provider(provider))
+		}, pulumi.Provider(provider), pulumi.DependsOn([]pulumi.Resource{
+			databaseContainer,
+		}))
 
 		if err != nil {
 			return err
