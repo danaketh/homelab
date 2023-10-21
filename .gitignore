@@ -1,2 +1,3 @@
 .idea/
-AdGuardHome.yaml
+stacks/adguard/etc/AdGuardHome.yaml
+stacks/gitea_runner/etc/config.yaml
