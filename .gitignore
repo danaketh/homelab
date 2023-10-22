@@ -1,3 +1,4 @@
 .idea/
 stacks/adguard/etc/AdGuardHome.yaml
 stacks/gitea_runner/etc/config.yaml
+Pulumi.*.yaml
