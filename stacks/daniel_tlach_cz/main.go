@@ -16,6 +16,9 @@ func main() {
 		// Config
 		cfg := config.New(ctx, "")
 		ghostDatabasePasswordSecret := cfg.RequireSecret("ghost_database_password")
+		directusKeySecret := cfg.RequireSecret("directus_key")
+		directusSecretSecret := cfg.RequireSecret("directus_secret")
+		directusAdminPasswordSecret := cfg.RequireSecret("directus_admin_password")
 
 		// Set up provider
 		provider, err := docker.NewProvider(ctx, "khorne", &docker.ProviderArgs{
@@ -45,6 +48,13 @@ func main() {
 			return err
 		}
 
+		directusImage, err := docker.NewRemoteImage(ctx, "directus_image", &docker.RemoteImageArgs{
+			Name: pulumi.String("directus/directus"),
+		})
+		if err != nil {
+			return err
+		}
+
 		// Create volumes
 		timezoneVolume := &docker.ContainerVolumeArgs{
 			ContainerPath: pulumi.String(TimezoneVolumePath),
@@ -69,6 +79,20 @@ func main() {
 			Name:   pulumi.String("daniel_tlach_cz_ghost_data_volume"),
 			Driver: pulumi.String("local"),
 		}, pulumi.Provider(provider))
+		if err != nil {
+			return err
+		}
+
+		directusDatabaseVolume, err := docker.NewVolume(ctx, "daniel_tlach_cz_directus_database_volume", &docker.VolumeArgs{
+			Name: pulumi.String("daniel_tlach_cz_directus_database_volume"),
+		})
+		if err != nil {
+			return err
+		}
+
+		directusUploadsVolume, err := docker.NewVolume(ctx, "daniel_tlach_cz_directus_uploads_volume", &docker.VolumeArgs{
+			Name: pulumi.String("daniel_tlach_cz_directus_uploads_volume"),
+		})
 		if err != nil {
 			return err
 		}
@@ -163,8 +187,66 @@ func main() {
 			return err
 		}
 
+		directusContainer, err := docker.NewContainer(ctx, "daniel_tlach_cz_directus_container", &docker.ContainerArgs{
+			Image:   directusImage.RepoDigest,
+			Name:    pulumi.String("daniel_tlach_cz_directus"),
+			Restart: pulumi.String("always"),
+			Volumes: &docker.ContainerVolumeArray{
+				&docker.ContainerVolumeArgs{
+					ContainerPath: pulumi.String("/directus/database"),
+					VolumeName:    directusDatabaseVolume.Name,
+				},
+				&docker.ContainerVolumeArgs{
+					ContainerPath: pulumi.String("/directus/uploads"),
+					VolumeName:    directusUploadsVolume.Name,
+				},
+				timezoneVolume,
+				localtimeVolume,
+			},
+			Ports: &docker.ContainerPortArray{
+				&docker.ContainerPortArgs{
+					Internal: pulumi.Int(8055),
+					External: pulumi.Int(8104),
+				},
+			},
+			Envs: pulumi.StringArray{
+				directusKeySecret.ApplyT(func(secret string) string {
+					return "KEY=" + secret
+				}).(pulumi.StringOutput),
+				directusSecretSecret.ApplyT(func(secret string) string {
+					return "SECRET=" + secret
+				}).(pulumi.StringOutput),
+				pulumi.String("ADMIN_EMAIL=daniel@tlach.cz"),
+				directusAdminPasswordSecret.ApplyT(func(secret string) string {
+					return "ADMIN_PASSWORD=" + secret
+				}).(pulumi.StringOutput),
+				pulumi.String("DB_CLIENT=sqlite3"),
+				pulumi.String("DB_FILENAME=/directus/database/database.sqlite"),
+				pulumi.String("WEBSOCKETS_ENABLED=true"),
+			},
+			Labels: &docker.ContainerLabelArray{
+				&docker.ContainerLabelArgs{
+					Label: pulumi.String("traefik.enable"),
+					Value: pulumi.String("true"),
+				},
+				&docker.ContainerLabelArgs{
+					Label: pulumi.String("traefik.http.routers.directus_daniel_tlach_cz.entrypoints"),
+					Value: pulumi.String("http"),
+				},
+				&docker.ContainerLabelArgs{
+					Label: pulumi.String("traefik.http.routers.directus_daniel_tlach_cz.rule"),
+					Value: pulumi.String("Host(`directus.daniel_tlach_cz.home`)"),
+				},
+				&docker.ContainerLabelArgs{
+					Label: pulumi.String("traefik.http.services.directus_daniel_tlach_cz.loadbalancer.server.port"),
+					Value: pulumi.String("8055"),
+				},
+			},
+		}, pulumi.Provider(provider))
+
 		ctx.Export("ghost_daniel_tlach_cz_database_container_id", ghostDatabaseContainer.ID())
 		ctx.Export("ghost_daniel_tlach_cz_container_id", ghostContainer.ID())
+		ctx.Export("directus_daniel_tlach_cz_container_id", directusContainer.ID())
 
 		return nil
 	})
