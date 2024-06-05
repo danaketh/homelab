@@ -1,0 +1,3 @@
+name: homelab-daniel_tlach_cz
+runtime: go
+description: Stack for local development of daniel.tlach.cz
