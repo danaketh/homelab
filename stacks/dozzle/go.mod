@@ -1,6 +1,8 @@
 module homelab-dozzle
 
-go 1.20
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/pulumi/pulumi-docker/sdk/v4 v4.4.3
